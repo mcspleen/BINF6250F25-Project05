@@ -241,7 +241,7 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position):
     aligned_seq1 = ""
     aligned_seq2 = ""
     
-    current_row, current_column <- maximum_position
+    current_row, current_column = maximum_position
     current_move = traceback_matrix[current_row, current_column]
     
     while current_move != 0:
