@@ -206,7 +206,7 @@ def cal_score(matrix, seq1, seq2, i, j, match, mismatch, gap):
 ```
 
 ```{python}
-def traceback(seq1, seq2, traceback_matrix, maximum_position, score_matrix):
+def traceback(seq1, seq2, traceback_matrix, maximum_position):
     '''Find the optimal path through scoring marix
         
         diagonal: match/mismatch
@@ -243,12 +243,7 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position, score_matrix):
     # Initialize aligned seq1 and seq2
     tb_seq1 = ""
     tb_seq2 = ""
-    #print(f"seq1: {seq1}, current_row: {current_row}")
-    #print(f"seq2: {seq2}, current_column: {current_column}")
-    #print(f"move number: {move}, position: ({current_row},{current_column}), score: {score}, seq1: {tb_seq1}, seq2: {tb_seq2}, current_move: {current_move}")
     
-    
-
     while current_move != 0:
       if current_move == 1:
         tb_seq1 += seq1[current_row-1]
@@ -272,7 +267,6 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position, score_matrix):
       
       current_move = traceback_matrix[current_row, current_column]
       move += 1 
-      #print(f"move number: {move}, position: ({current_row},{current_column}), score: {score_matrix[current_row][current_column]}, seq1: {tb_seq1}, seq2: {tb_seq2}, current_move: {current_move}")
     
     aligned_seq1 = tb_seq1[::-1]
     aligned_seq2 = tb_seq2[::-1]
@@ -312,9 +306,6 @@ def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
     # a 1-D array. np.unravel_index unpacks that value and returns a tuple where 
     # the value is in terms of rows, columns.
     max_position = np.unravel_index(np.argmax(score_matrix, axis=None), score_matrix.shape)
-
-    #print(max_position)
-    #print(score_matrix[max_position])
     
     aligned_seq1, aligned_seq2 = traceback(seq1, seq2, traceback_matrix, max_position, score_matrix)
     return aligned_seq1, aligned_seq2, score_matrix
