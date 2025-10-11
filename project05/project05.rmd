@@ -151,7 +151,7 @@ SmithWaterman(seq1, seq2, match, mismatch, gap)
     
 ```
 
-```{python}
+```{python cal_score}
 def cal_score(matrix, seq1, seq2, i, j, match, mismatch, gap):
     '''Calculate score for position (i,j) in scoring matrix, also record move to trace back
     
@@ -205,7 +205,7 @@ def cal_score(matrix, seq1, seq2, i, j, match, mismatch, gap):
     return score, traceback 
 ```
 
-```{python}
+```{python traceback}
 def traceback(seq1, seq2, traceback_matrix, maximum_position):
     '''Find the optimal path through scoring marix
         
@@ -234,39 +234,46 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position):
                 ...
             
     '''
-    
-    current_row, current_column = maximum_position
-    current_move = traceback_matrix[current_row, current_column]
-    move = 0
-    score = score_matrix[current_row, current_column]
-    
     # Initialize aligned seq1 and seq2
     tb_seq1 = ""
     tb_seq2 = ""
     
+    current_row, current_column = maximum_position  # get row and column positions
+    current_move = traceback_matrix[current_row, current_column]  # access first move
+    
+    # loop until END(0) is reached
     while current_move != 0:
+      
+      # when move is diagonal
       if current_move == 1:
+        # add nucleotides to both sequences (string is one less index than matrix)
         tb_seq1 += seq1[current_row-1]
         tb_seq2 += seq2[current_column-1]
         
         # update row, column
         current_row -= 1
         current_column -= 1
-        
+      
+      # when move is up  
       elif current_move == 2:
-        #tb_seq1 += seq1[current_row-1]
+        # add nucleotide to seq1 and gap to seq2
+        tb_seq1 += seq1[current_row-1]
         tb_seq2 += "-"
         
+        # update row only
         current_row -= 1
         
+      # when move is left
       elif current_move == 3:
+        # add gap to seq1 and nucleotide to seq2
         tb_seq1 += "-"
-        #tb_seq2 += seq2[current_column-1]
+        tb_seq2 += seq2[current_column-1]
         
+        # update column only
         current_column -= 1
       
-      current_move = traceback_matrix[current_row, current_column]
-      move += 1 
+      current_move = traceback_matrix[current_row, current_column]  # get move of new position
+      
     
     aligned_seq1 = tb_seq1[::-1]
     aligned_seq2 = tb_seq2[::-1]
@@ -275,7 +282,7 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position):
             
 ```
 
-```{python}
+```{python smith_waterman}
 def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
     '''Smith-Waterman algorithm for local alignment
     
@@ -293,25 +300,29 @@ def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
     '''
     m = len(seq1) + 1  # number of rows
     n = len(seq2) + 1  # number of columns
+    
+    # initialize score and traceback matrices with zeros
     score_matrix = np.zeros((m, n))
     traceback_matrix = np.zeros((m, n))
     
+    # iterate through each position of the matrices except the first row and column
     for i in range(1, m):
       for j in range(1, n):
+        # calculate+update score and traceback of each position 
         score_matrix[i, j], traceback_matrix[i, j] = cal_score(score_matrix, seq1, seq2, i, j, match, mismatch, gap)
-        #print(f"index: {i,j}")
-        #print(score_matrix)
         
-    # np.argmax will return the position of the maximum but as if the matrix was
-    # a 1-D array. np.unravel_index unpacks that value and returns a tuple where 
-    # the value is in terms of rows, columns.
+        
+    # np.argmax - return the position of the maximum but as if the matrix was a 1-D array
+    # np.unravel_index - unpacks that value and returns a tuple where the value is in terms of rows, columns.
     max_position = np.unravel_index(np.argmax(score_matrix, axis=None), score_matrix.shape)
     
-    aligned_seq1, aligned_seq2 = traceback(seq1, seq2, traceback_matrix, max_position, score_matrix)
+    # call+store results from traceback into separate seqs
+    aligned_seq1, aligned_seq2 = traceback(seq1, seq2, traceback_matrix, max_position)
+    
     return aligned_seq1, aligned_seq2, score_matrix
 ```
 
-```{python, eval=FALSE}
+```{python driver, eval=FALSE}
 # Example from slides
 seq1 = 'TACTTAG'
 seq2 = 'CACATTAA'
