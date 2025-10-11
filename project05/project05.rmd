@@ -280,8 +280,6 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position, score_matrix):
     return aligned_seq1, aligned_seq2
             
 ```
-            
-```
 
 ```{python}
 def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
