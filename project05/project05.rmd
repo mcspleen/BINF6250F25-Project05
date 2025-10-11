@@ -203,6 +203,7 @@ def cal_score(matrix, seq1, seq2, i, j, match, mismatch, gap):
     
     
     return score, traceback 
+```
 
 ```{python}
 def traceback(seq1, seq2, traceback_matrix, maximum_position, score_matrix):
