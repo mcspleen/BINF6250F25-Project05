@@ -180,7 +180,7 @@ def cal_score(matrix, seq1, seq2, i, j, match, mismatch, gap):
     up_node = matrix[i-1, j]
     left_node = matrix[i, j-1]
     
-    # calculate diag_score by comparing respective nucleotides
+    # Calculate diag_score by comparing respective nucleotides
     # Needs - 1 because we start i and j at 1
     if seq1[i-1] == seq2[j-1]:
       diag_score = diag_node + match
@@ -189,11 +189,13 @@ def cal_score(matrix, seq1, seq2, i, j, match, mismatch, gap):
       
     up_score = up_node + gap
     left_score = left_node + gap
-    
+
+    # Box's score
     score = max(0, diag_score, up_score, left_score)
-    
+
+    # Determine traceback matrix score 
     if score == diag_score:
-      traceback = 1
+      traceback = 1 
     elif score == up_score:
       traceback = 2
     elif score == left_score:
@@ -241,40 +243,40 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position):
     current_row, current_column = maximum_position  # get row and column positions
     current_move = traceback_matrix[current_row, current_column]  # access first move
     
-    # loop until END(0) is reached
+    # Loop until END(0) is reached
     while current_move != 0:
       
-      # when move is diagonal
+      # When move is diagonal
       if current_move == 1:
-        # add nucleotides to both sequences (string is one less index than matrix)
+        # Add nucleotides to both sequences (string is one less index than matrix)
         tb_seq1 += seq1[current_row-1]
         tb_seq2 += seq2[current_column-1]
         
-        # update row, column
+        # Update row, column
         current_row -= 1
         current_column -= 1
       
-      # when move is up  
+      # When move is up  
       elif current_move == 2:
-        # add nucleotide to seq1 and gap to seq2
+        # Add nucleotide to seq1 and gap to seq2
         tb_seq1 += seq1[current_row-1]
         tb_seq2 += "-"
         
         # update row only
         current_row -= 1
         
-      # when move is left
+      # When move is left
       elif current_move == 3:
-        # add gap to seq1 and nucleotide to seq2
+        # Add gap to seq1 and nucleotide to seq2
         tb_seq1 += "-"
         tb_seq2 += seq2[current_column-1]
         
-        # update column only
+        # Update column only
         current_column -= 1
       
-      current_move = traceback_matrix[current_row, current_column]  # get move of new position
+      current_move = traceback_matrix[current_row, current_column]  # Get move of new position
       
-    
+    # Reverse strings to make nucleotide order correct
     aligned_seq1 = tb_seq1[::-1]
     aligned_seq2 = tb_seq2[::-1]
       
@@ -298,17 +300,17 @@ def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
         aligned_seq2 (str)
         score_matrix (numpy array): scoring matrix
     '''
-    m = len(seq1) + 1  # number of rows
-    n = len(seq2) + 1  # number of columns
+    m = len(seq1) + 1  # Number of rows
+    n = len(seq2) + 1  # Number of columns
     
-    # initialize score and traceback matrices with zeros
+    # Initialize score and traceback matrices with zeros
     score_matrix = np.zeros((m, n))
     traceback_matrix = np.zeros((m, n))
     
-    # iterate through each position of the matrices except the first row and column
+    # Iterate through each position of the matrices except the first row and column
     for i in range(1, m):
       for j in range(1, n):
-        # calculate+update score and traceback of each position 
+        # Calculate+update score and traceback of each position 
         score_matrix[i, j], traceback_matrix[i, j] = cal_score(score_matrix, seq1, seq2, i, j, match, mismatch, gap)
         
         
@@ -316,7 +318,7 @@ def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
     # np.unravel_index - unpacks that value and returns a tuple where the value is in terms of rows, columns.
     max_position = np.unravel_index(np.argmax(score_matrix, axis=None), score_matrix.shape)
     
-    # call+store results from traceback into separate seqs
+    # Call + store results from traceback into separate seqs
     aligned_seq1, aligned_seq2 = traceback(seq1, seq2, traceback_matrix, max_position)
     
     return aligned_seq1, aligned_seq2, score_matrix
