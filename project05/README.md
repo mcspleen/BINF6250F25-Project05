@@ -1,6 +1,6 @@
 # Introduction
 
-Description of the project
+In this project, we utilized the Smith-Waterman Algorithm to align two given sequences. The Smith-Waterman Algorithm is a dynamic programming method which breaks an overall problem into overlapping subproblems, storing their information to avoid repeated calculations. In the case of aligning two nucleotide-based sequences, we compare the sequences nucleotide by nucleotide and store the results in two matrices: one for scoring as matching or mismatching, and another for tracing back the aligned sequences. 
 
 # Pseudocode
 
@@ -112,7 +112,7 @@ Function traceback(seq1, seq2, traceback_matrix, maximum_position)
 
 ## Group Leader - Jason
 
-Group leader's reflection on the project
+This project was a great expansion on the Markov property concept and its application in omics. Initially, I was afraid of balancing two matrices and ensuring that their results reflected one another. However, once we got over the hump of visualizing these matrices and how to modify our indexes to traverse them, this project became very straightforward. I picked up several new numpy functions while learning how to manipulate numpy arrays, some of which I did not get to use but look forward to possibly applying them in future projects. 
 
 ## Other member - Zoe
 
