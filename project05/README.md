@@ -120,4 +120,4 @@ This project became much more manageable once we understood how the scoring and 
 
 # Generative AI Appendix
 
-As per the syllabus
+We did not use generative AI in this project.
