@@ -262,7 +262,7 @@ def traceback(seq1, seq2, traceback_matrix, maximum_position):
         tb_seq1 += seq1[current_row-1]
         tb_seq2 += "-"
         
-        # update row only
+        # Update row only
         current_row -= 1
         
       # When move is left
